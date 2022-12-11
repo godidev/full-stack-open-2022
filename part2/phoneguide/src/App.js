@@ -7,9 +7,16 @@ const App = () => {
   ])
   const [newName, setNewName] = useState('')
 
+  function checkIfExists() {
+    const filter = persons.filter(({ name }) => name === newName)
+    return filter.length === 0
+  }
+
   function handleSubmit(event) {
     event.preventDefault()
-    setPersons(persons.concat({ name: newName }))
+    checkIfExists() ?
+      setPersons(persons.concat({ name: newName })) :
+      alert(`${newName} is already added to phonebook`)
     setNewName('')
   }
 
