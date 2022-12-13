@@ -1,11 +1,10 @@
 import './App.css';
 import { useState, useEffect } from 'react'
 import axios from 'axios'
-import SearchCountry from './components/SearchCountry';
-import CountryFilter from './components/CountryFilter';
+import Country from './components/Country';
 
 function App() {
-  const [query, setQuery] = useState({ filter: '', countries: {} })
+  const [searchCountry, setSearchCountry] = useState('')
   const [countries, setCountries] = useState([])
 
   useEffect(() => {
@@ -20,22 +19,16 @@ function App() {
 
   function handleChange(event) {
     const { value } = event.target
-    const result = countries.filter(country => {
-      return (
-        country.name.common.toLowerCase().includes(
-          value.toLowerCase())
-      )
-    })
-    setQuery({
-      filter: value,
-      countries: result
-    })
+    setSearchCountry(value)
   }
+  const filteredCountries = countries.filter(country =>
+    country.name.common.toLowerCase()
+      .includes(searchCountry.toLowerCase()))
 
   return (
     <div>
-      <SearchCountry handleChange={handleChange} value={query.filter || ''} />
-      <CountryFilter countries={query.countries} />
+      Find countries <input onChange={handleChange} value={searchCountry} />
+      <Country key={searchCountry} countries={filteredCountries} setSearchCountry={setSearchCountry} />
     </div>
   );
 }
