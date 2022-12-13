@@ -1,9 +1,10 @@
 import CountryList from "./CountryList"
+import Weather from "./Weather"
 
 export default function Country({ countries, setSearchCountry }) {
     if (countries.length === 1) {
         return (countries.map(country => {
-            const { capital, area, languages } = country
+            const { capital, area, languages, latlng } = country
             const flag = country.flags.png
             const name = country.name.common
             const lang = Object.values(languages).map(lang => lang)
@@ -17,6 +18,7 @@ export default function Country({ countries, setSearchCountry }) {
                         {lang.map(lang => <li key={lang}>{lang}</li>)}
                     </ul>
                     <img alt='' src={flag}></img>
+                    <Weather coordinates={latlng} capital={capital}/>
                 </div>
             )
         }))
