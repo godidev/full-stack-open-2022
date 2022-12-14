@@ -4,11 +4,14 @@ import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import personService from './services/getPersons'
+import Notification from './components/Notification'
+import './index.css'
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newPerson, setNewPerson] = useState({ name: '', number: '' })
   const [filterName, setFilterName] = useState('')
+  const [message, setMessage] = useState(null)
 
   useEffect(() => {
     personService
@@ -42,6 +45,10 @@ const App = () => {
         .create({ ...newPerson, id: (persons.length) + 1 })
         .then(res => setPersons(persons.concat(res)))
     }
+    setMessage(newPerson.name)
+    setTimeout(() => {
+      setMessage(null)
+    }, 5000)
     setNewPerson('')
   }
 
@@ -67,6 +74,7 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
+      <Notification name={message} />
       <Filter handleFilter={handleFilter} filter={filterName} />
       <h2>Add a new</h2>
       <PersonForm
