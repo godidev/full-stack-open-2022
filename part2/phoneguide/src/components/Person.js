@@ -1,5 +1,9 @@
-export default function Person({ name, number }) {
+export default function Person({ name, number, deleteName }) {
     return (
-        <p>{name}hola<strong>{number}</strong></p>
+        <p>
+            {name}
+            <strong>    {number}   </strong>
+            <button onClick={deleteName}>delete</button>
+        </p>
     )
 }

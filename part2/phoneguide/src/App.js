@@ -1,3 +1,4 @@
+import axios from 'axios'
 import React, { useState, useEffect } from 'react'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
@@ -37,6 +38,14 @@ const App = () => {
     setFilterName(value)
   }
 
+  function deleteName(id) {
+    if (window.confirm("Do you really want to delete the name?")) {
+      axios.delete(`http://localhost:3001/persons/${id}`)
+      getPersons()
+        .then(persons => setPersons(persons))
+    }
+  }
+
   return (
     <div>
       <h1>Phonebook</h1>
@@ -48,7 +57,7 @@ const App = () => {
         handleChange={handleChange}
       />
       <h2>Numbers</h2>
-      <Persons persons={persons} filterBy={filterName} />
+      <Persons persons={persons} filterBy={filterName} deleteName={deleteName} />
     </div>
   )
 }
