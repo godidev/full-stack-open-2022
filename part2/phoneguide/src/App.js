@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
-import getPersons from './services/getPersons'
+import personService from './services/getPersons'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -11,20 +11,37 @@ const App = () => {
   const [filterName, setFilterName] = useState('')
 
   useEffect(() => {
-    getPersons()
+    personService
+      .getPersons()
       .then(persons => setPersons(persons))
   }, [])
 
   function checkIfExists() {
     const filter = persons.filter(({ name }) => name === newPerson.name)
-    return filter.length === 0
+    return filter.length !== 0
+  }
+
+  function getId() {
+    const id = persons.filter(({ name }) => name === newPerson.name).map(item => item.id)[0]
+    return id || 0
   }
 
   function handleSubmit(event) {
     event.preventDefault()
-    checkIfExists() ?
-      setPersons(persons.concat({ name: newPerson.name, number: newPerson.number, id: (persons.length) + 1 })) :
-      alert(`${newPerson.name} is already added to phonebook`)
+    getId()
+    if (checkIfExists()) {
+      const str = `${newPerson.name} is already added to phonebook, replace the old number?`
+      if (window.confirm(str)) {
+        const id = getId()
+        personService.update(getId(), newPerson)
+          .then(res =>
+            setPersons(persons.map(person => person.id !== id ? person : res)))
+      }
+    } else {
+      personService
+        .create({ ...newPerson, id: (persons.length) + 1 })
+        .then(res => setPersons(persons.concat(res)))
+    }
     setNewPerson('')
   }
 
@@ -41,7 +58,8 @@ const App = () => {
   function deleteName(id) {
     if (window.confirm("Do you really want to delete the name?")) {
       axios.delete(`http://localhost:3001/persons/${id}`)
-      getPersons()
+      personService
+        .getPersons()
         .then(persons => setPersons(persons))
     }
   }
