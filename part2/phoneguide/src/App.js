@@ -36,16 +36,26 @@ const App = () => {
       const str = `${newPerson.name} is already added to phonebook, replace the old number?`
       if (window.confirm(str)) {
         const id = getId()
-        personService.update(getId(), newPerson)
-          .then(res =>
-            setPersons(persons.map(person => person.id !== id ? person : res)))
+        personService.update(id, newPerson)
+          .then(res => {
+            setPersons(persons.map(person => person.id !== id ? person : res))
+            setMessage(`Added ${newPerson.name}`)
+          })
+          .catch(() => {
+            setMessage(`ERROR: Information of ${newPerson.name} has already been removed from server`)
+            personService
+              .getPersons()
+              .then(persons => setPersons(persons))
+          })
       }
     } else {
       personService
-        .create({ ...newPerson, id: (persons.length) + 1 })
-        .then(res => setPersons(persons.concat(res)))
+        .create(newPerson)
+        .then(res => {
+          setPersons(prevPerson => prevPerson.concat(res))
+          setMessage(newPerson.name)
+        })
     }
-    setMessage(newPerson.name)
     setTimeout(() => {
       setMessage(null)
     }, 5000)
@@ -74,7 +84,7 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
-      <Notification name={message} />
+      <Notification message={message} />
       <Filter handleFilter={handleFilter} filter={filterName} />
       <h2>Add a new</h2>
       <PersonForm
