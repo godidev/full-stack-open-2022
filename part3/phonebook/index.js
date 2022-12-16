@@ -1,7 +1,13 @@
 const { response, request } = require('express')
 const express = require('express')
+const morgan = require('morgan')
 const app = express()
 
+morgan.token('body', (req) => {
+    return JSON.stringify(req.body)
+})
+
+app.use(morgan('tiny'))
 app.use(express.json())
 
 let persons = [
@@ -28,7 +34,7 @@ let persons = [
 ]
 
 app.get('/', (request, response) => {
-    response.send('<h1>Hello World!</h1>')
+    response.send('hello, world')
 })
 
 app.get('/info', (request, response) => {
@@ -51,7 +57,7 @@ app.get('/api/persons/:id', (request, response) => {
     }
 })
 
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', morgan(':body'), (request, response) => {
     const { name, number } = request.body
     if (!name || !number) {
         return response.status(422).json({
