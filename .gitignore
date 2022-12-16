@@ -1,5 +1,5 @@
 # dependencies
-/node_modules
+**/node_modules
 /.pnp
 .pnp.js
 
@@ -23,3 +23,5 @@ yarn-error.log*
 logo.svg
 logo512.png
 logo192.png
+part2/notes/*
+
