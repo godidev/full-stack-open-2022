@@ -1,3 +1,4 @@
+const { response } = require('express')
 const express = require('express')
 const app = express()
 
@@ -26,6 +27,12 @@ let persons = [
 
 app.get('/', (request, response) => {
     response.send('<h1>Hello World!</h1>')
+})
+
+app.get('/info', (request, response) => {
+    const people = persons.length
+    response.send(`<p>Phonebook has info for ${people} people</p> \
+    <p>${new Date()}</p>`)
 })
 
 app.get('/api/persons', (request, response) => {
