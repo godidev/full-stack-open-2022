@@ -41,7 +41,7 @@ const App = () => {
             setPersons(persons.map(person => person.id !== id ? person : res))
             setMessage(`Added ${newPerson.name}`)
           })
-          .catch(() => {
+          .catch(e => {
             setMessage(`ERROR: Information of ${newPerson.name} has already been removed from server`)
             personService
               .getPersons()
@@ -54,6 +54,9 @@ const App = () => {
         .then(res => {
           setPersons(prevPerson => prevPerson.concat(res))
           setMessage(newPerson.name)
+        })
+        .catch(error => {
+          setMessage(`${error.response.data.error}: Name must be at least 3 characters`)
         })
     }
     setTimeout(() => {
@@ -74,7 +77,7 @@ const App = () => {
 
   function deleteName(id) {
     if (window.confirm("Do you really want to delete the name?")) {
-      axios.delete(`http://localhost:3001/persons/${id}`)
+      axios.delete(`/api/persons/${id}`)
       personService
         .getPersons()
         .then(persons => setPersons(persons))
