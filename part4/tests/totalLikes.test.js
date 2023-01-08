@@ -54,6 +54,12 @@ const blogs = [
   }
 ]
 
+const favorite = {
+  title: 'Canonical string reduction',
+  author: 'Edsger W. Dijkstra',
+  likes: 12,
+}
+
 describe('total likes', () => {
   test('return total likes of all blogs', () => {
     expect(listHelper.totalLikes(blogs)).toBe(36)
@@ -75,6 +81,17 @@ describe('total likes', () => {
       }
     ]
     expect(listHelper.totalLikes(listWithOneBlog)).toBe(5)
+  })
+})
+
+describe('favorite blog', () => {
+  test('theres one with most likes', () => {
+    const favoriteReturn = listHelper.favoriteBlog(blogs)
+    expect(favoriteReturn).toEqual(favorite)
+  })
+  test('return favorite of empty blog', () => {
+    const favoriteReturn = listHelper.favoriteBlog([])
+    expect(favoriteReturn).toBe(0)
   })
 })
 
