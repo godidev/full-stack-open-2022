@@ -31,34 +31,17 @@ const App = () => {
 
   function handleSubmit(event) {
     event.preventDefault()
-    getId()
-    if (checkIfExists()) {
-      const str = `${newPerson.name} is already added to phonebook, replace the old number?`
-      if (window.confirm(str)) {
-        const id = getId()
-        personService.update(id, newPerson)
-          .then(res => {
-            setPersons(persons.map(person => person.id !== id ? person : res))
-            setMessage(`Added ${newPerson.name}`)
-          })
-          .catch(e => {
-            setMessage(`ERROR: Information of ${newPerson.name} has already been removed from server`)
-            personService
-              .getPersons()
-              .then(persons => setPersons(persons))
-          })
-      }
-    } else {
-      personService
-        .create(newPerson)
-        .then(res => {
-          setPersons(prevPerson => prevPerson.concat(res))
-          setMessage(newPerson.name)
-        })
-        .catch(error => {
-          setMessage(`${error.response.data.error}: Name must be at least 3 characters`)
-        })
-    }
+
+    personService
+      .create(newPerson)
+      .then(res => {
+        setPersons(prevPerson => prevPerson.concat(res))
+        setMessage(`${newPerson.name} added to phonebook`)
+      })
+      .catch(error => {
+        setMessage(`error: ${error.response.data.error}`)
+      })
+
     setTimeout(() => {
       setMessage(null)
     }, 5000)
