@@ -4,6 +4,7 @@ const express = require('express')
 const app = express()
 const cors = require('cors')
 const mongoose = require('mongoose')
+const logger = require('./utils/logger')
 
 const blogSchema = new mongoose.Schema({
   title: String,
@@ -16,8 +17,8 @@ const Blog = mongoose.model('Blog', blogSchema)
 
 const mongoUrl = config.MONGODB_URI
 mongoose.connect(mongoUrl)
-  .then(() => console.log('connected'))
-  .catch(() => console.log('Error connecting to BBDD'))
+  .then(() => logger.info('connected'))
+  .catch(() => logger.info('Error connecting to BBDD'))
 
 app.use(cors())
 app.use(express.json())
@@ -46,5 +47,5 @@ app.post('/api/blogs', (request, response) => {
 
 const PORT = config.PORT
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
+  logger.info(`Server running on port ${PORT}`)
 })
