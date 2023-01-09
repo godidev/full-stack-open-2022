@@ -60,6 +60,18 @@ describe('Add blogs to database', () => {
 
     expect(response.body.likes).toBe(0)
   })
+
+  test('when request doesn\'t include title or url', async () => {
+    const newBlog ={
+      author: 'prueba',
+      likes: 24
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+  })
 })
 
 afterAll(() => {
