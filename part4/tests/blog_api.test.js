@@ -74,6 +74,14 @@ describe('Add blogs to database', () => {
   })
 })
 
+describe('delete blogs from database', () => {
+  test('delete exising blog', async () => {
+    await api
+      .delete('/api/blogs/this is blog 1')
+      .expect(204)
+  })
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
