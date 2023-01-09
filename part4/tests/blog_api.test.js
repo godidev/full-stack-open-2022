@@ -44,6 +44,24 @@ describe('check ID definition', () => {
   })
 })
 
+describe('Add blogs to database', () => {
+  test('when request doesn\'t include likes', async () => {
+    const newBlog = {
+      title: 'prueba',
+      author: 'prueba',
+      url:'prueba'
+    }
+
+    const response = await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    expect(response.body.likes).toBe(0)
+  })
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
