@@ -30,14 +30,14 @@ beforeEach(async () => {
   await blog2.save()
 })
 
-test('blogs are returned as json', async () => {
-  await api
-    .get('/api/blogs')
-    .expect(200)
-    .expect('Content-Type', /application\/json/)
-})
+describe('Get data from database', () => {
+  test('blogs are returned as json', async () => {
+    await api
+      .get('/api/blogs')
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+  })
 
-describe('check ID definition', () => {
   test('Is ID field defined as `id` instead of `_id`', async () => {
     const response = await api.get('/api/blogs')
     expect(response.body[0].id).toBeDefined()
