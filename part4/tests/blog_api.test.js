@@ -2,6 +2,8 @@ const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
 const Blog = require('../models/blog')
+const User = require('../models/user')
+const { getOneUserId } = require('./helpers')
 
 const api = supertest(app)
 
@@ -22,6 +24,10 @@ const blogs = [
 
 beforeEach(async () => {
   await Blog.deleteMany({})
+  await User.deleteMany({})
+
+  const user = new User({ username: 'enigma69', name: 'Pedro', password: 'rotonda' })
+  await user.save()
 
   const blog1 = new Blog(blogs[0])
   await blog1.save()
@@ -46,10 +52,12 @@ describe('Get data from database', () => {
 
 describe('Add blogs to database', () => {
   test('when request doesn\'t include likes', async () => {
+    const id = await getOneUserId()
     const newBlog = {
       title: 'prueba',
       author: 'prueba',
-      url:'prueba'
+      url:'prueba',
+      userId: id
     }
 
     const response = await api
@@ -62,9 +70,11 @@ describe('Add blogs to database', () => {
   })
 
   test('when request doesn\'t include title or url', async () => {
+    const id =  await getOneUserId()
     const newBlog ={
       author: 'prueba',
-      likes: 24
+      likes: 24,
+      userId: id
     }
 
     await api
@@ -75,7 +85,7 @@ describe('Add blogs to database', () => {
 })
 
 describe('delete blogs from database', () => {
-  test('delete exising blog', async () => {
+  test('delete existing blog', async () => {
     await api
       .delete('/api/blogs/this is blog 1')
       .expect(204)
