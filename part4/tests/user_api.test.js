@@ -1,5 +1,3 @@
-const bcrypt = require('bcrypt')
-const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
 const User = require('../models/user')
@@ -35,6 +33,19 @@ describe('when there is initially one user in db', () => {
     expect(usersAtEnd).toHaveLength(usersAtStart.length + 1)
 
     expect(usersAtEnd).toContain(newUser.username)
+  })
+
+  test('creation of user with username/password < 3', async () => {
+    const user = {
+      username: 'JohnDoe',
+      name: 'John Doe',
+      password: 'a1',
+    }
+    await api
+      .post('/api/users')
+      .send(user)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
   })
 })
 
