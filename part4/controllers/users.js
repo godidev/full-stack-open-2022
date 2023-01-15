@@ -15,14 +15,19 @@ userRouter.post('/', async (request, response) => {
   } else {
     const passwordHash = await bcrypt.hash(password, 10)
 
-    const user = new User({
-      username,
-      name,
-      passwordHash
-    })
+    try {
+      const user = new User({
+        username,
+        name,
+        passwordHash
+      })
 
-    const savedUser = await user.save()
-    response.status(201).json(savedUser)
+      const savedUser = await user.save()
+      response.status(201).json(savedUser)
+    } catch(error){
+      error.message.includes('11000') &&
+        response.json({ error: 'username already exists' })
+    }
   }
 })
 
