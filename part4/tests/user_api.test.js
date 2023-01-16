@@ -2,6 +2,7 @@ const supertest = require('supertest')
 const app = require('../app')
 const User = require('../models/user')
 const { getUsernames } = require('./helpers')
+const server = require('../index')
 
 const api = supertest(app)
 
@@ -12,6 +13,8 @@ beforeEach(async () => {
 
   await user.save()
 })
+
+afterEach(() => { server.close() })
 
 describe('when there is initially one user in db', () => {
   test('creation succeeds with a fresh username', async () => {

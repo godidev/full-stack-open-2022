@@ -4,6 +4,7 @@ const app = require('../app')
 const Blog = require('../models/blog')
 const User = require('../models/user')
 const { getOneUserId } = require('./helpers')
+const server = require('../index')
 
 const api = supertest(app)
 
@@ -35,6 +36,8 @@ beforeEach(async () => {
   const blog2 = new Blog(blogs[1])
   await blog2.save()
 })
+
+afterEach(() => { server.close() })
 
 describe('Get data from database', () => {
   test('blogs are returned as json', async () => {
