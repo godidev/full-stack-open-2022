@@ -70,10 +70,16 @@ blogsRouter.delete('/:id', async (request, response) => {
   response.status(204).end()
 })
 
-blogsRouter.put('/:name', async (request, response) => {
-  const name = request.params.name
-  await Blog.findOneAndUpdate({ name: name }, { likes: 35 })
-  response.status(204).end()
+blogsRouter.put('/:id', async (request, response) => {
+  const { likes } = request.body
+  const id = request.params.id
+  try {
+    await Blog.findOneAndUpdate({ id }, { likes })
+    const updatedBlog = await Blog.findById(id)
+    response.status(200).json(updatedBlog)
+  } catch (error){
+    response.status(400).end()
+  }
 })
 
 module.exports = blogsRouter
