@@ -59,26 +59,49 @@ blogsRouter.post('/', async (request, response) => {
 blogsRouter.delete('/:id', async (request, response) => {
   const id = request.params.id
   const token = getTokenFrom(request)
+  if (!token || !(jwt.verify(token, process.env.SECRET).id)) {
+    return response.status(401).json({ error: 'token missing or invalid' })
+  }
   const decodedToken = jwt.verify(token, process.env.SECRET)
   const blog = await Blog.findById(id)
 
   if (blog.user.toString() !== decodedToken.id.toString()) {
-    response.status(400).end()
+    response.status(400).json({ error: 'You have no permision to delete' })
   }
 
-  await Blog.findOneAndDelete(id)
-  response.status(204).end()
+  try {
+    await Blog.findOneAndDelete(id)
+    response.status(204).end()
+  } catch (error) {
+    console.error(error)
+  }
 })
 
 blogsRouter.put('/:id', async (request, response) => {
-  const { likes } = request.body
+  let { likes = 0 } = request.body
+  const { title, author, url } = request.body
   const id = request.params.id
-  try {
-    await Blog.findOneAndUpdate({ id }, { likes })
-    const updatedBlog = await Blog.findById(id)
-    response.status(200).json(updatedBlog)
-  } catch (error){
-    response.status(400).end()
+
+  const token = getTokenFrom(request)
+
+  if (!token || !(jwt.verify(token, process.env.SECRET).id)) {
+    return response.status(401).json({ error: 'token missing or invalid' })
+  }
+
+  const decodedToken = jwt.verify(token, process.env.SECRET)
+  const user = await User.findById(decodedToken.id)
+  const blogToUpdate = await Blog.findById(id)
+
+  if ( blogToUpdate.user._id.toString() === user._id.toString() ) {
+    const blog = { title,author,url,likes, }
+    try {
+      const updatedBlog = await Blog.findByIdAndUpdate(id, blog, { new: true })
+      response.json(updatedBlog.toJSON())
+    } catch (error){
+      response.status(400).end()
+    }
+  } else {
+    return response.status(401).json({ error: 'Unauthorized' })
   }
 })
 
