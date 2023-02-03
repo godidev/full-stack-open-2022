@@ -90,9 +90,8 @@ blogsRouter.put('/:id', async (request, response) => {
 
   const decodedToken = jwt.verify(token, process.env.SECRET)
   const user = await User.findById(decodedToken.id)
-  const blogToUpdate = await Blog.findById(id)
 
-  if ( blogToUpdate.user._id.toString() === user._id.toString() ) {
+  if ( user._id.toString() ) {
     const blog = { title,author,url,likes, }
     try {
       const updatedBlog = await Blog.findByIdAndUpdate(id, blog, { new: true })
