@@ -23,7 +23,26 @@ const reducer = (state = initialState, action) => {
   console.log('state now: ', state)
   console.log('action', action)
 
-  return state
+  switch(action.type) {
+    case 'VOTE':
+      const {id} = action.payload
+      return state.map(anecdote => {
+        return anecdote.id === id 
+        ? {...anecdote, votes: anecdote.votes + 1}
+        : anecdote
+      })
+    default:
+      return state
+  }
+}
+
+export const vote = id => {
+  return {
+    type: 'VOTE',
+    payload: {
+      id,
+    }
+  }
 }
 
 export default reducer
