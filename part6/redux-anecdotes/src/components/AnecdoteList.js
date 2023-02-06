@@ -19,6 +19,10 @@ const AnecdoteList = () => {
 
     const handleClick = (id) => {
       dispatch({type: 'anecdotes/vote', payload: id})
+      dispatch({type: 'notification/setNotification', payload: 'Voted!'})
+      setTimeout(() => {
+        dispatch({type: 'notification/setNotification', payload: null})
+      }, 5000)
     }
 
     return (
