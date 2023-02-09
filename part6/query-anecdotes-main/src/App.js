@@ -1,4 +1,4 @@
-import {useQuery} from 'react-query'
+import {useQuery } from 'react-query'
 import AnecdoteForm from './components/AnecdoteForm'
 import Notification from './components/Notification'
 import { getAll } from './services/request'
