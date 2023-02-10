@@ -1,21 +1,11 @@
-import {useMutation, useQueryClient, useQuery } from 'react-query'
+import { useQuery } from 'react-query'
 import AnecdoteForm from './components/AnecdoteForm'
 import Notification from './components/Notification'
-import { getAll, updateVotes } from './services/request'
+import { getAll } from './services/request'
+import { NotificationContextProvider } from './context/NotificationContext'
+import AnecdoteList from './components/AnecdoteList'
 
 const App = () => {
-  const queryClient = useQueryClient()
-
-  const updateVotesMutation = useMutation(updateVotes, {
-    onSuccess: () => {
-      queryClient.invalidateQueries('anecdotes')
-    }
-  })
-
-  const handleVote = (anecdote) => {
-    updateVotesMutation.mutate({...anecdote, votes: anecdote.votes += 1})
-  }
-
   const {isLoading, isError, data, error} = useQuery('anecdotes', getAll, {
     retry: false
   })
@@ -29,21 +19,12 @@ const App = () => {
   return (
       <div>
         <h3>Anecdote app</h3>
-      
-        <Notification />
-        <AnecdoteForm />
-      
-        {data.map(anecdote =>
-          <div key={anecdote.id}>
-            <div>
-              {anecdote.content}
-            </div>
-            <div>
-              has {anecdote.votes}
-              <button onClick={() => handleVote(anecdote)}>vote</button>
-            </div>
-          </div>
-        )}
+        <NotificationContextProvider>
+          <Notification />
+          <AnecdoteForm />
+          <AnecdoteList data={data}/>
+          {}
+        </NotificationContextProvider>
       </div>
   )
 }
