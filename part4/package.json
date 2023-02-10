@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "cross-env NODE_ENV=production node index.js",
+    "start:test": "cross-env NODE_ENV=test nodemon index.js",
     "dev": "cross-env NODE_ENV=development nodemon index.js",
     "lint": "eslint .",
     "test": "cross-env NODE_ENV=test jest --verbose --runInBand --forceExit"
@@ -14,7 +15,7 @@
   "dependencies": {
     "bcrypt": "5.1.0",
     "cors": "2.8.5",
-    "dotenv": "16.0.3",
+    "dotenv": "16.0.3", 
     "express": "4.18.2",
     "jsonwebtoken": "9.0.0",
     "mongoose": "6.8.3"
