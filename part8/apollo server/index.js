@@ -126,7 +126,11 @@ type Book {
       author: String!
       published: Int!
       genres: [String]!
-    ): Book
+    ): Book,
+    editAuthor(
+      name: String!
+      setBornTo: Int!
+    ): Author
   }
 `
 
@@ -167,6 +171,17 @@ const resolvers = {
       }
       books.push(bookInfo)
       return bookInfo
+    },
+    editAuthor: (root, args) => {
+      const authorToEditIndex = authors.findIndex(
+        (author) => author.name === args.name,
+      )
+
+      if (authorToEditIndex === -1) return null
+
+      authors[authorToEditIndex].born = args.setBornTo
+
+      return authors[authorToEditIndex]
     },
   },
 }
