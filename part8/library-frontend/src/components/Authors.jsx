@@ -1,10 +1,24 @@
-import { useQuery } from '@apollo/client'
-import { ALL_AUTHORS } from '../helpers/queries'
+import { useMutation, useQuery } from '@apollo/client'
+import { ALL_AUTHORS, EDIT_AUTHOR } from '../helpers/queries'
+import { useState } from 'react'
 
 const Authors = (props) => {
   const { loading, error, data } = useQuery(ALL_AUTHORS, { pollInterval: 3000 })
+  const [name, setName] = useState('')
+  const [born, setBorn] = useState(0)
+  const [editBook] = useMutation(EDIT_AUTHOR)
   if (!props.show) {
     return null
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    try {
+      await editBook({ variables: { name, born } })
+    } catch (error) {
+      console.error(error.message)
+    }
   }
 
   if (loading) return 'Loading...'
@@ -30,17 +44,27 @@ const Authors = (props) => {
         </tbody>
       </table>
       <h3>Set birthyear</h3>
-      <form>
+      <form onSubmit={handleSubmit}>
         <div>
           <label>
             name
-            <input type='text' name='name' />
+            <input
+              type='text'
+              name='name'
+              value={name}
+              onChange={({ target }) => setName(target.value)}
+            />
           </label>
         </div>
         <div>
           <label>
             born
-            <input type='number' name='born' />
+            <input
+              type='number'
+              name='born'
+              value={born}
+              onChange={({ target }) => setBorn(Number(target.value))}
+            />
           </label>
         </div>
         <button>Update</button>
