@@ -29,6 +29,22 @@ const Authors = (props) => {
           ))}
         </tbody>
       </table>
+      <h3>Set birthyear</h3>
+      <form>
+        <div>
+          <label>
+            name
+            <input type='text' name='name' />
+          </label>
+        </div>
+        <div>
+          <label>
+            born
+            <input type='number' name='born' />
+          </label>
+        </div>
+        <button>Update</button>
+      </form>
     </div>
   )
 }
