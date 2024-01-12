@@ -165,6 +165,7 @@ const resolvers = {
   Mutation: {
     addBook: (root, args) => {
       const bookInfo = args
+      console.log({ bookInfo })
       let existingAuthor = books.find((book) => book.author === bookInfo.author)
       if (!existingAuthor) {
         authors.push({ author: bookInfo.author, id: uuidv4() })

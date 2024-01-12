@@ -1,16 +1,8 @@
-import { gql, useQuery } from '@apollo/client'
+import { useQuery } from '@apollo/client'
+import { ALL_AUTHORS } from '../helpers/queries'
 
-const ALL_AUTHORS = gql`
-  query {
-    allAuthors {
-      name
-      born
-      bookCount
-    }
-  }
-`
 const Authors = (props) => {
-  const { loading, error, data } = useQuery(ALL_AUTHORS)
+  const { loading, error, data } = useQuery(ALL_AUTHORS, { pollInterval: 3000 })
   if (!props.show) {
     return null
   }
